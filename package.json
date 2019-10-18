@@ -1,0 +1,22 @@
+{
+  "name": "webvr-with-threejs",
+  "version": "0.0.1",
+  "description": "WebVR with three.js",
+  "author": "Axel Springer Ideas Engineering GmbH",
+  "license": "MIT",
+  "main": "http_server.js",
+  "scripts": {
+    "start": "node http_server.js",
+    "build": "rm -rf build && webpack"
+  },
+  "dependencies": {
+    "express": "4.17.1",
+    "serve-static": "1.14.1",
+    "three": "0.108.0"
+  },
+  "devDependencies": {
+    "webpack": "4.40.2",
+    "webpack-cli": "3.3.9",
+    "copy-webpack-plugin": "5.0.4"
+  }
+}

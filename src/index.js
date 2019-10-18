@@ -2,6 +2,7 @@ import {
   BoxGeometry,
   Clock,
   Color,
+  CylinderGeometry,
   Group,
   HemisphereLight,
   LineSegments,
@@ -87,6 +88,16 @@ function start() {
       cube = new Mesh( geometry, material );
       cube.position.y = 1;
       scene.add( cube );
+
+      // RENDER CONTROLLER
+      const controller = renderer.vr.getController( 0 );
+      const cylinderGeometry = new CylinderGeometry( 0.025, 0.025, 1, 32 );
+      const cylinderMaterial = new MeshPhongMaterial( {color: 0xffff00} );
+      const cylinder = new Mesh( cylinderGeometry, cylinderMaterial );
+      cylinder.geometry.translate( 0, 0.5, 0 );
+      cylinder.rotateX( - 0.25 * Math.PI );
+      controller.add( cylinder );
+      cameraFixture.add( controller );
 
       // ADD RENDER LOOP
       renderer.setAnimationLoop( render );

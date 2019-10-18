@@ -20,7 +20,7 @@ import { BoxLineGeometry } from 'three/examples/jsm/geometries/BoxLineGeometry';
 start();
 
 function start() {
-  let camera, clock, scene, renderer, room, cube;
+  let camera, clock, scene, renderer, room, cube, cameraFixture;
 
   function render() {
     const delta = clock.getDelta();
@@ -37,6 +37,22 @@ function start() {
     renderer.setSize( window.innerWidth, window.innerHeight );
   }
 
+  function createController( controllerId ) {
+      // RENDER CONTROLLER
+      const controller = renderer.vr.getController( controllerId );
+      const cylinderGeometry = new CylinderGeometry( 0.025, 0.025, 1, 32 );
+      const cylinderMaterial = new MeshPhongMaterial( {color: 0xffff00} );
+      const cylinder = new Mesh( cylinderGeometry, cylinderMaterial );
+      cylinder.geometry.translate( 0, 0.5, 0 );
+      cylinder.rotateX( - 0.25 * Math.PI );
+      controller.add( cylinder );
+      cameraFixture.add( controller );
+
+      // TRIGGER
+      controller.addEventListener( 'selectstart', () => { cylinderMaterial.color.set( 0xff0000 ) } );
+      controller.addEventListener( 'selectend', () => { cylinderMaterial.color.set( 0xffff00 ) } );
+  }
+
   function init() {
       // Clock
       clock = new Clock();
@@ -46,7 +62,7 @@ function start() {
       scene.background = new Color( 0x000000 );
 
       // CAMERA
-      const cameraFixture = new Group();
+      cameraFixture = new Group();
       camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 30 );
       cameraFixture.add( camera );
       cameraFixture.position.set( 0, 1, 3 );
@@ -89,15 +105,8 @@ function start() {
       cube.position.y = 1;
       scene.add( cube );
 
-      // RENDER CONTROLLER
-      const controller = renderer.vr.getController( 0 );
-      const cylinderGeometry = new CylinderGeometry( 0.025, 0.025, 1, 32 );
-      const cylinderMaterial = new MeshPhongMaterial( {color: 0xffff00} );
-      const cylinder = new Mesh( cylinderGeometry, cylinderMaterial );
-      cylinder.geometry.translate( 0, 0.5, 0 );
-      cylinder.rotateX( - 0.25 * Math.PI );
-      controller.add( cylinder );
-      cameraFixture.add( controller );
+      createController( 0 );
+      createController( 1 );
 
       // ADD RENDER LOOP
       renderer.setAnimationLoop( render );

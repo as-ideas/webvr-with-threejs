@@ -2,6 +2,7 @@ import {
   BoxGeometry,
   Clock,
   Color,
+  Group,
   HemisphereLight,
   LineSegments,
   LineBasicMaterial,
@@ -12,6 +13,7 @@ import {
   TextureLoader,
   WebGLRenderer
  } from 'three';
+import { WEBVR } from 'three/examples/jsm/vr/WebVR.js';
 import { BoxLineGeometry } from 'three/examples/jsm/geometries/BoxLineGeometry';
 
 start();
@@ -43,9 +45,11 @@ function start() {
       scene.background = new Color( 0x000000 );
 
       // CAMERA
+      const cameraFixture = new Group();
       camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 30 );
-      camera.position.set( 0, 1, 3 );
-      scene.add( camera );
+      cameraFixture.add( camera );
+      cameraFixture.position.set( 0, 1, 3 );
+      scene.add( cameraFixture );
 
       // ROOM
       room = new LineSegments(
@@ -65,6 +69,10 @@ function start() {
       renderer.setPixelRatio( window.devicePixelRatio );
       renderer.setSize( window.innerWidth, window.innerHeight );
       document.body.appendChild( renderer.domElement );
+
+      // VR ENABLED
+      renderer.vr.enabled = true;
+      document.body.appendChild( WEBVR.createButton( renderer ) );
 
       // RESIZE EVENT HOOK
       window.addEventListener( 'resize', onWindowResize, false );
